@@ -4,12 +4,16 @@ const express = require('express');
 const app = express();
 
 
+// Directorio público.
+app.use( express.static( 'public' ) );
+
+
 // Rutas.
-app.get( '/', ( req, res ) => {
+/* app.get( '/', ( req, res ) => {
     res.json({
         ok: true
     });
-});
+}); */
 
 
 // Escuchar peticiones.
