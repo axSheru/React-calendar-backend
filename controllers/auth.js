@@ -32,6 +32,17 @@ const loginUser = ( req, res = express.response ) => {
 
     const { email, password } = req.body;
 
+    // Manejo de errores.
+    const errors = validationResult( req );
+
+    if ( ! errors.isEmpty() ) {
+        return res.status( 400 ).json({
+            ok: false,
+            msg: 'Error, check your request.',
+            errors: errors.mapped()
+        });
+    }
+
     res.json({
         ok: true,
         msg: 'login',

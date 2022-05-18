@@ -16,9 +16,16 @@ router.post(
         check( 'password', 'The field password should be at least 6 characters long.' ).isLength({ min: 6 })
     ],
     createUser
-    );
+);
 
-router.post( '/', loginUser );
+router.post(
+    '/',
+    [
+        check( 'email', 'The field email is not valid.' ).isEmail(),
+        check( 'password', 'The field password should be at least 6 characters long.' ).isLength({ min: 6 })        
+    ],
+    loginUser
+);
 
 router.get( '/renew', renewToken );
 
