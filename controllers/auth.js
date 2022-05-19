@@ -47,16 +47,49 @@ const createUser = async ( req, res = express.response ) => {
 };
 
 
-const loginUser = ( req, res = express.response ) => {
+const loginUser = async ( req, res = express.response ) => {
 
     const { email, password } = req.body;
 
-    res.json({
-        ok: true,
-        msg: 'login',
-        email,
-        password
-    });
+    try {
+
+        const usuario = await Usuario.findOne({ email });
+        
+        if ( ! usuario ) {
+            return res.status( 400 ).json({
+                ok: false,
+                msg: 'El email ingresado no está registrado.'
+            });
+        }
+
+        // Validar contraseña.
+        const validarPassword = bcrypt.compareSync( password, usuario.password );
+        
+        if ( ! validarPassword ) {
+            return res.status( 400 ).json({
+                ok: false,
+                msg: 'Contraseña incorrecta.'
+            });
+        }
+
+        // Generar JWT.
+
+        res.json({
+            ok: true,
+            msg: 'Inicio de sesión exitoso.',
+            uid: usuario.id,
+            name: usuario.name
+        });
+        
+    } catch (error) {
+
+        console.log( error );
+        res.status( 500 ).json({
+            ok: false,
+            msg: 'Por favor comuníquese con el administrador.'
+        });
+        
+    }
 };
 
 const renewToken =  ( req, res = express.response ) => {
