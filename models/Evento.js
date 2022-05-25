@@ -4,22 +4,23 @@ const EventoSchema = Schema({
 
     title: {
         type: String,
-        require: true
+        required: true
     },
     notes: {
         type: String
     },
     start: {
         type: Date,
-        require: true
+        required: true
     },
     end: {
         type: Date,
-        require: true
+        required: true
     },
     user: {
         type: Schema.Types.ObjectId,
-        ref: 'Usuario'
+        ref: 'Usuario',
+        required: true
     }
 
 });
