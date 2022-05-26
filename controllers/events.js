@@ -64,7 +64,7 @@ const actualizarEvento = async ( req, res = express.response ) => {
 
         if ( ! evento ) {
             
-            res.status( 404 ).json({
+            return res.status( 404 ).json({
                 ok: false,
                 msg: 'Evento no encontrado.'
             });
@@ -73,7 +73,7 @@ const actualizarEvento = async ( req, res = express.response ) => {
 
         if ( evento.user.toString() !== uid ) {
 
-            res.status( 401 ).json({
+            return res.status( 401 ).json({
                 ok: false,
                 msg: 'No tiene permisos para realizar esta acción.'
             });
@@ -104,20 +104,51 @@ const actualizarEvento = async ( req, res = express.response ) => {
     }
 
 };
-const eliminarEvento = ( req, res = express.response ) => {
+const eliminarEvento = async ( req, res = express.response ) => {
 
-    res.json({
-        ok: true,
-        msg: 'eliminarEvento.'
-    });
+    const eventoID = req.params.id;
+    const uid = req.uid;
+
+    try {
+
+        const evento = await Evento.findById( eventoID );
+
+        if ( ! evento ) {
+            
+            return res.status( 404 ).json({
+                ok: false,
+                msg: 'Evento no encontrado.'
+            });
+
+        }
+
+        if ( evento.user.toString() !== uid ) {
+
+            return res.status( 401 ).json({
+                ok: false,
+                msg: 'No tiene permisos para realizar esta acción.'
+            });
+
+        }
+
+        await Evento.findByIdAndDelete( eventoID );
+
+        res.json({
+            ok: true,
+            msg: 'Evento eliminado correctamente.'
+        });
+        
+    } catch (error) {
+
+        console.log( error );
+        res.status( 500 ).json({
+            ok: false,
+            msg: 'Por favor comuníquese con el administrador.'
+        });
+        
+    }
 
 };
-
-/* {
-    ok: true,
-    msg: 'Evento llamado....'
-}
- */
 
 module.exports = {
     getEventos,
