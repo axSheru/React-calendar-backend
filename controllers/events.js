@@ -1,4 +1,5 @@
 const express = require("express");
+const { findByIdAndUpdate } = require("../models/Evento");
 const Evento = require("../models/Evento");
 
 
@@ -52,12 +53,55 @@ const crearEvento = async ( req, res = express.response ) => {
     }
 
 };
-const actualizarEvento = ( req, res = express.response ) => {
+const actualizarEvento = async ( req, res = express.response ) => {
 
-    res.json({
-        ok: true,
-        msg: 'actualizarEvento.'
-    });
+    const eventoID = req.params.id;
+    const uid = req.uid;
+
+    try {
+
+        const evento = await Evento.findById( eventoID );
+
+        if ( ! evento ) {
+            
+            res.status( 404 ).json({
+                ok: false,
+                msg: 'Evento no encontrado.'
+            });
+
+        }
+
+        if ( evento.user.toString() !== uid ) {
+
+            res.status( 401 ).json({
+                ok: false,
+                msg: 'No tiene permisos para realizar esta acción.'
+            });
+
+        }
+
+        const cambiosEvento = {
+            ...req.body,
+            user: uid
+        };
+
+        const eventoActualizado = await Evento.findByIdAndUpdate( eventoID, cambiosEvento, { new: true } );
+
+        res.json({
+            ok: true,
+            msg: 'Evento actualizado correctamente.',
+            evento: eventoActualizado
+        });
+        
+    } catch (error) {
+
+        console.log( error );
+        res.status( 500 ).json({
+            ok: false,
+            msg: 'Por favor comuníquese con el administrador.'
+        });
+        
+    }
 
 };
 const eliminarEvento = ( req, res = express.response ) => {
