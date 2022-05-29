@@ -11,5 +11,13 @@ You need to define your port, create a MongoDB instance and add the connection s
 
 Finally define an string that JWT is going to use as a base.
 
-To run this project execute:  
+## Heroku
+
+If you use Heroku to deploy this project, you need to set the **environment variables** using this commands.
+
+```heroku config:set VARIABLE_NAME=VARIABLE_VALUE```
+
+or you can do it directly in the [dashboard](https://dashboard.heroku.com/) in the **settings** section.
+
+To run this project execute:   
     ```npm run dev```
