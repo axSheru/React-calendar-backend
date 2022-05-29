@@ -19,5 +19,9 @@ If you use Heroku to deploy this project, you need to set the **environment vari
 
 or you can do it directly in the [dashboard](https://dashboard.heroku.com/) in the **settings** section.
 
+To see the the logs, you must run in your terminal
+
+```heroku logs -n 1000 --tail```
+
 To run this project execute:   
     ```npm run dev```
